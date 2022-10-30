@@ -19,6 +19,7 @@ const feedbackRoute = require("./routes/feedback");
 const webnotifyRoute = require("./routes/webnotify");
 const coingateRoute = require("./routes/coingate");
 const razorpayRoute = require("./routes/razorpay");
+const forgotPasswordRoute = require("./routes/forgotpassword");
 
 const Sentry = require("@sentry/node");
 
@@ -58,10 +59,11 @@ app.use("/api/feedback", feedbackRoute);
 app.use("/api/webnotify", webnotifyRoute);
 app.use("/api/coingate", coingateRoute);
 app.use("/api/razorpay", razorpayRoute);
+app.use("/api/reset", forgotPasswordRoute);
 
 
 app.use(errorHandler);
-const server = app.listen(process.env.PORT || 8080, () => {
+const server = app.listen(process.env.PORT || 5000, () => {
     console.log("Backend server is running!");
 });
 
