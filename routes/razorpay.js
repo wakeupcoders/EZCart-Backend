@@ -2,6 +2,8 @@ const router = require("express").Router();
 const CustomErrorHandler = require("../services/CustomErrorHandler");
 let razorpayInstance = require('../helpers/razorpay');
 const crypto = require('crypto');
+const sendMail = require("../services/EmailService");
+
 
 //Create Order in CoinGate
 router.post("/", async(req, res,next) => {
@@ -48,7 +50,28 @@ router.post("/verify", async(req, res,next) => {
             // Database comes here
             // await Payment.create({razorpay_order_id,razorpay_payment_id,razorpay_signature,});
             // res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`);
-            res.status(200).json({success: true,});
+            sendMail({
+                from: "cgqspider@gmail.com",
+                to: req.body.email,
+                subject: "Order Confirmation",
+                text: `Your order is received. Thanks for Shopping with us.`,
+                html: require("../templates/orderConfirmationEmailTemplate")({
+                    emailFrom: req.body.email,
+                    //name: req.body.name,
+                    trackLink: "google.com",
+                    // size: ' KB',
+                    // expires: "5 Minutes",
+                }),
+            })
+            .then(() => {
+                return res.status(200).json({success: true,});
+                //return res.json({ message: "Order Confirmation Email Sent!!" });
+                //return res.json({success: true});
+            })
+            .catch((err) => {
+                return res.status(500).json({ message: err });
+            });
+           
           } 
           else 
           {
