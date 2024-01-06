@@ -12,7 +12,7 @@ const sendEmail = async({ from, to, subject, text, html }) => {
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: `inShare <${from}>`, // sender address
+        from: `EZCart <${from}>`, // sender address
         to: to, // list of receivers
         subject: subject, // Subject line
         text: text, // plain text body

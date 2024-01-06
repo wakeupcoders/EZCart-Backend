@@ -33,7 +33,7 @@ router.post("/", async(req, res, next) => {
                     to: req.body.email,
                     subject: "Reset Password Link",
                     text: `Reset Password`,
-                    html: require("../templates/registerEmailTemplate")({
+                    html: require("../templates/forgotPasswordEmailTemplate")({
                         emailFrom: req.body.email,
                         name: "",
                         confirmLink: convermationLink,
