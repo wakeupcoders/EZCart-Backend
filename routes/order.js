@@ -2,6 +2,7 @@ const Order = require("../models/Order");
 const User = require("../models/User");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
+const sendMail = require("../services/EmailService");
 
 const { isValidObjectId } = require("mongoose");
 
@@ -80,6 +81,30 @@ router.post("/", verifyToken, async(req, res, next) => {
 
                 //Deleting Cart of User
                 await Cart.findOneAndRemove({ userId: userId });
+
+                if(req.body.pmode==="COD"){
+                    sendMail({
+                        from: "cgqspider@gmail.com",
+                        to: req.body.email,
+                        subject: "Order Confirmation",
+                        text: `Your order is received. Thanks for Shopping with us.`,
+                        html: require("../templates/orderConfirmationEmailTemplate")({
+                            emailFrom: req.body.email,
+                            //name: req.body.name,
+                            trackLink: "google.com",
+                            // size: ' KB',
+                            // expires: "5 Minutes",
+                        }),
+                    })
+                    .then(() => {
+                        //return res.json({ message: "Order Confirmation Email Sent!!" });
+                        //return res.json({success: true});
+                    })
+                    .catch((err) => {
+                        //return res.status(500).json({ message: err });
+                    });
+
+                }
 
                 const io = req.app.get("socketio");
                 io.emit("notification", req.body);
