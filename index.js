@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+var path=require('path');
 const dotenv = require("dotenv");
 dotenv.config();
 const userRoute = require("./routes/user");
@@ -39,7 +40,7 @@ mongoose
         console.log(err);
     });
 
-
+app.use("/images", express.static('uploads'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

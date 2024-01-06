@@ -1,13 +1,14 @@
 const router = require("express").Router();
 const CustomErrorHandler = require("../services/CustomErrorHandler");
 let multerInstance = require('../helpers/fileuploader');
+var { APP_URL } = require("../config/index");
 const fs = require('fs');
 
 
 //Create Order in CoinGate
 router.post("/singleupload",multerInstance.single('file'), async(req, res,next) => {
     try {
-        res.json({ message: req.file });
+        res.json({ metadata: req.file, 'fileUrl': APP_URL+"/images/"+req.file.filename });
     } catch (err) {
         next(err)
     }
