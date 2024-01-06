@@ -72,6 +72,7 @@ router.post("/", verifyToken, async(req, res, next) => {
                     phone: req.body.phone,
                     pmode: req.body.pmode,
                     address: req.body.address,
+                    status: req.body.status
                 };
 
                 const newOrder = new Order(orderDetails);
