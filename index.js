@@ -20,6 +20,7 @@ const webnotifyRoute = require("./routes/webnotify");
 const coingateRoute = require("./routes/coingate");
 const razorpayRoute = require("./routes/razorpay");
 const forgotPasswordRoute = require("./routes/forgotpassword");
+const fileuploaderRoute = require("./routes/fileuploader");
 
 const Sentry = require("@sentry/node");
 
@@ -60,6 +61,7 @@ app.use("/api/webnotify", webnotifyRoute);
 app.use("/api/coingate", coingateRoute);
 app.use("/api/razorpay", razorpayRoute);
 app.use("/api/reset", forgotPasswordRoute);
+app.use("/api/fileuploader", fileuploaderRoute);
 
 
 app.use(errorHandler);
