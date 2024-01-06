@@ -5,7 +5,7 @@ module.exports = ({ emailFrom, name, confirmLink, expires }) => {
     <head>
         <meta name="viewport" content="width=device-width">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Simple Transactional Email</title>
+        <title>EZCarts Email Confirmation </title>
         <style>
         /* -------------------------------------
             INLINED WITH htmlemail.io/inline
@@ -115,7 +115,7 @@ module.exports = ({ emailFrom, name, confirmLink, expires }) => {
                         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
                             <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Hi ${name},</p>
                             <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;"><b>${emailFrom}</b> is not Confirmed...</p>
-                            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">To access all of your services, you need to confirm your account.</p>
+                            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">To have amazing shopping experience with us, you need to confirm your account.</p>
                             <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">This link will expires in ${expires}</p>
                             
                             <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
@@ -125,7 +125,7 @@ module.exports = ({ emailFrom, name, confirmLink, expires }) => {
                                     <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto;">
                                     <tbody>
                                         <tr>
-                                        <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; background-color: #3498db; border-radius: 5px; text-align: center;"> <a href="${confirmLink}" target="_blank" style="display: inline-block; color: #ffffff; background-color: #3498db; border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #3498db;">Confirm Account</a> </td>
+                                        <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; background-color: #4B49AC; border-radius: 5px; text-align: center;"> <a href="${confirmLink}" target="_blank" style="display: inline-block; color: #ffffff; background-color: #4B49AC; border: solid 1px #4B49AC; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #4B49AC;">Confirm Account</a> </td>
                                         </tr>
                                     </tbody>
                                     </table>
@@ -133,7 +133,7 @@ module.exports = ({ emailFrom, name, confirmLink, expires }) => {
                                 </tr>
                             </tbody>
                             </table>
-                            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Thank you for using inShare service.</p>
+                            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Thank you for using EZCart service.</p>
                             <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Good luck! Hope it works.</p>
                         </td>
                         </tr>
@@ -149,13 +149,13 @@ module.exports = ({ emailFrom, name, confirmLink, expires }) => {
                 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                     <tr>
                     <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                        <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">inShare inc. main street 29, Moscow</span>
-                        <br> Want to share a file? <a href="http://localhost:3000" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;">inShare</a>.
+                        <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">EZ Cart inc. Navi Mumbai, India</span>
+                        <br> Want to open a shopping store ? <a href="https://wakeupcoders.com/products" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;">EZCart</a>.
                     </td>
                     </tr>
                     <tr>
                     <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                        Powered by <a href="https://www.youtube.com/channel/UCo9xTRmg1SqQ5JSsA2fAgJw" style="color: #999999; font-size: 12px; text-align: center; text-decoration: none;">Wakeupcoders</a>.
+                        Powered by <a href="https://wakeupcoders.com/" style="color: #999999; font-size: 12px; text-align: center; text-decoration: none;">Wakeupcoders</a>.
                     </td>
                     </tr>
                 </table>
