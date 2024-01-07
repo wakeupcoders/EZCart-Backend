@@ -14,17 +14,17 @@ router.post("/singleupload",multerInstance.single('file'), async(req, res,next) 
     }
 });
 
-router.post("/cleanuploads", async(req, res,next) => {
+router.post("/singleremove", async(req, res,next) => {
     try {
-        fs.readdir('../uploads/', (err, files) => {
-            if (err) throw err;
-            
-            for (const file of files) {
-                console.log(file + ' : File Deleted Successfully.');
-                fs.unlinkSync(folder+file);
+        
+        fs.unlink(req.body.file, (err) => {
+            if (err) {
+              console.error(err)
+              return next();
             }
-            res.json({ message: 'File uploaded successfully!' });
-          });
+          return res.status(200).json({message:"file removed successfully"})
+          })
+
     } catch (err) {
         next(err)
     }
