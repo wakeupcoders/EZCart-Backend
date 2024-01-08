@@ -79,10 +79,11 @@ router.post("/", verifyToken, async(req, res, next) => {
                 const newOrder = new Order(orderDetails);
                 const savedOrder = await newOrder.save();
 
-                //Deleting Cart of User
-                await Cart.findOneAndRemove({ userId: userId });
+               
 
                 if(req.body.pmode==="COD"){
+                     //Deleting Cart of User
+                    await Cart.findOneAndRemove({ userId: userId });
                     sendMail({
                         from: "cgqspider@gmail.com",
                         to: req.body.email,
@@ -211,6 +212,10 @@ router.put("/orderstatus/:orderId", verifyToken, async(req, res) => {
         res.status(500).json(err);
     }
 });
+
+function orderStatusChange(){
+    
+}
 
 // //GET ALL
 router.get("/", verifyTokenAndAdmin, async(req, res) => {

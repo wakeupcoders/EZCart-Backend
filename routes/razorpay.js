@@ -4,6 +4,10 @@ let razorpayInstance = require('../helpers/razorpay');
 const crypto = require('crypto');
 const sendMail = require("../services/EmailService");
 const RazorpayPayment = require("../models/Razorpaypayments");
+const User = require("../models/User");
+const Order = require("../models/Order");
+const Cart = require("../models/Cart");
+
 const {
     verifyToken,
     verifyTokenAndAuthorization,
@@ -66,14 +70,23 @@ router.post("/verify", verifyToken,async(req, res,next) => {
 
         if (isAuthentic) {
 
-            const newpayment = new RazorpayPayment(req.body);
-            await newpayment.save();
+            await RazorpayPayment(req.body).save();
             // Database comes here
             // await Payment.create({razorpay_order_id,razorpay_payment_id,razorpay_signature,});
             // res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`);
+            await Cart.findOneAndRemove({ userId: req.body.userid });
+
+            const user=await User.findById(req.body.userid);
+
+            const updatedOrder = await Order.findByIdAndUpdate(
+                req.body.ezcart_order_id, {
+                    $set: { status: "placed" },
+                }, { new: true }
+            );
+
             sendMail({
                 from: "cgqspider@gmail.com",
-                to: "wakeupcoders@gmail.com",
+                to:  user["email"],
                 subject: "Order Confirmation",
                 text: `Your order is received. Thanks for Shopping with us.`,
                 html: require("../templates/orderConfirmationEmailTemplate")({
@@ -85,7 +98,7 @@ router.post("/verify", verifyToken,async(req, res,next) => {
                 }),
             })
             .then(() => {
-                return res.status(200).json({success: true,});
+                return res.status(200).json({success: true,order:updatedOrder, user:user});
                 //return res.json({ message: "Order Confirmation Email Sent!!" });
                 //return res.json({success: true});
             })
