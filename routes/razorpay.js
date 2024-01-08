@@ -3,10 +3,16 @@ const CustomErrorHandler = require("../services/CustomErrorHandler");
 let razorpayInstance = require('../helpers/razorpay');
 const crypto = require('crypto');
 const sendMail = require("../services/EmailService");
+const RazorpayPayment = require("../models/Razorpaypayments");
+const {
+    verifyToken,
+    verifyTokenAndAuthorization,
+    verifyTokenAndAdmin,
+} = require("./verifyToken");
 
 
 //Create Order in CoinGate
-router.post("/", async(req, res,next) => {
+router.post("/",verifyToken, async(req, res,next) => {
     var options = {
         amount: req.body.amount * 100, // amount in the smallest currency unit
         currency: "INR",
@@ -23,15 +29,8 @@ router.post("/", async(req, res,next) => {
                     error: "razor pay order creation unsuccessful"
                 });
             } else {
-                // const orderData = req.body;
-                console.log(order)
-                    // orderData["orderId"] = order.id;
-                    // const newOrder = new Order(orderData);
-                    // const savedOrder = await newOrder.save();
-
-                // console.log(order);
+                
                 res.status(200).json(order)
-
             }
         });
     } catch (err) {
@@ -39,7 +38,26 @@ router.post("/", async(req, res,next) => {
     }
 });
 
-router.post("/verify", async(req, res,next) => {
+router.get("/", verifyToken, async(req, res, next) => {
+    try {
+        const allPayments = await RazorpayPayment.find();
+        res.status(200).json(allPayments);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+//GET USER PAYMENTS
+router.get("/find/:userId", verifyToken, async(req, res, next) => {
+    try {
+        const singlePayment = await RazorpayPayment.find({ userId: req.params.userId });
+        res.status(200).json(singlePayment);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+router.post("/verify", verifyToken,async(req, res,next) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
         const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -47,12 +65,15 @@ router.post("/verify", async(req, res,next) => {
         const isAuthentic = expectedSignature === razorpay_signature;
 
         if (isAuthentic) {
+
+            const newpayment = new RazorpayPayment(req.body);
+            await newpayment.save();
             // Database comes here
             // await Payment.create({razorpay_order_id,razorpay_payment_id,razorpay_signature,});
             // res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`);
             sendMail({
                 from: "cgqspider@gmail.com",
-                to: req.body.email,
+                to: "wakeupcoders@gmail.com",
                 subject: "Order Confirmation",
                 text: `Your order is received. Thanks for Shopping with us.`,
                 html: require("../templates/orderConfirmationEmailTemplate")({
@@ -81,5 +102,39 @@ router.post("/verify", async(req, res,next) => {
         next(err)
     }
 });
+
+router.delete("/:id", verifyToken, async(req, res, next) => {
+    try {
+
+        if (req.params.id === "clean") {
+            await RazorpayPayment.remove();
+            msg = "All Payments has been Cleaned";
+        } else {
+            await RazorpayPayment.findByIdAndDelete(req.params.id);
+            msg = "Payment has been deleted...";
+        }
+
+       
+        res.status(200).json({"message":msg});
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+//UPDATE
+router.put("/:id", verifyToken, async(req, res, next) => {
+    try {
+        const updatedPayment = await RazorpayPayment.findByIdAndUpdate(
+            req.params.id, {
+                $set: req.body,
+            }, { new: true }
+        );
+        res.status(200).json(updatedPayment);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+
 
 module.exports = router;
