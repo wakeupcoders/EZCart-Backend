@@ -43,10 +43,17 @@ router.post("/",verifyToken, async(req, res,next) => {
 });
 
 router.get("/", verifyToken, async(req, res, next) => {
+    const { page, perpage } = req.query;
+    const options = {
+        page: parseInt(page, 10),
+        limit: parseInt(perpage, 10),
+    };
     try {
-        const allPayments = await RazorpayPayment.find();
-        res.status(200).json(allPayments);
-    } catch (err) {
+        let payments;
+        payments = await RazorpayPayment.paginate({}, options);
+        res.status(200).json(payments);
+    } 
+    catch (err) {
         res.status(500).json(err);
     }
 });
