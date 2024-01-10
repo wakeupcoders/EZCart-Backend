@@ -197,4 +197,30 @@ router.get("/", async(req, res) => {
     }
 });
 
+//GET ALL PRODUCTS by categories group
+router.get("/groupproducts", async(req, res) => {
+    
+    try {
+        const doc = await Product.aggregate([
+            { $sort: { date: -1 } },
+            {
+              $group: {
+                _id: "$pcollection",
+                products: { $push: "$$ROOT" }
+              }
+            },
+            {
+              $project: {
+                products: { $slice: ["$products", 4] }
+              }
+            }
+            
+          ])
+
+        res.status(200).json(doc);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 module.exports = router;

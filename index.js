@@ -41,6 +41,7 @@ mongoose
     });
 
 app.use("/images", express.static('uploads'));
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -64,11 +65,13 @@ app.use("/api/razorpay", razorpayRoute);
 app.use("/api/reset", forgotPasswordRoute);
 app.use("/api/fileuploader", fileuploaderRoute);
 
+app.use(express.static('dist'));
 
 app.use(errorHandler);
 const server = app.listen(process.env.PORT || 5000, () => {
     console.log("Backend server is running!");
 });
+
 
 
 // Socket Layer over Http Server
