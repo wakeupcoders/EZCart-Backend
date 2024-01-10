@@ -213,10 +213,6 @@ router.put("/orderstatus/:orderId", verifyToken, async(req, res) => {
     }
 });
 
-function orderStatusChange(){
-    
-}
-
 // //GET ALL
 router.get("/", verifyTokenAndAdmin, async(req, res) => {
     try {
