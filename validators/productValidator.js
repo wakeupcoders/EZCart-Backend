@@ -9,9 +9,10 @@ const productSchema = Joi.object({
     color: Joi.array().items(Joi.string().required()).required(),
     pcollection: Joi.string().required(),
     price: Joi.number().required(),
-    originalprice: Joi.number().required()
-
-
+    originalprice: Joi.number().required(),
+    inStock: Joi.boolean().required(),
+    inTrending: Joi.boolean().required(),
+    inFeatured: Joi.boolean().required()
 });
 
 

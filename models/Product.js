@@ -13,6 +13,8 @@ const ProductSchema = new mongoose.Schema({
     price: { type: Number, required: true },
     originalprice: { type: Number, required: true },
     inStock: { type: Boolean, default: true },
+    inTrending: { type: Boolean, default: false },
+    inFeatured: { type: Boolean, default: false },
 }, { timestamps: true });
 
 ProductSchema.plugin(paginate);
