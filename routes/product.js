@@ -177,7 +177,7 @@ router.get("/", async(req, res) => {
         limit: parseInt(perpage, 10),
     };
     try {
-        let products;
+        let products, featuredproducts, trendingproducts;
 
         if (qNew) {
             products = await Product.find().sort({ createdAt: -1 }).limit(1);
@@ -189,8 +189,14 @@ router.get("/", async(req, res) => {
             });
         } else {
             products = await Product.paginate({}, options);
+            featuredproducts = await Product.find({inFeatured:true}).sort({ createdAt: -1 });
+            trendingproducts = await Product.find({inTrending:true}).sort({ createdAt: -1 });
         }
 
+        products.featuredProducts=featuredproducts;
+        products.trendingproducts=trendingproducts;
+
+        console.log(products)
         res.status(200).json(products);
     } catch (err) {
         res.status(500).json(err);
