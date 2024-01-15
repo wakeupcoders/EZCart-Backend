@@ -59,6 +59,10 @@ router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
   totalWishlist = 0;
   totalCustomer = 0;
   totalAmount = 0;
+  totalOrderCancelled=0;
+  totalOrderPlaced=0;
+  totalOrderShipped=0;
+  totalOrderConfirmed=0;
 
 
 
@@ -104,8 +108,6 @@ router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
       totalWishlist=wishlistCount[0].totalWishlist;
     }
 
-
-
     const customerCount = await User.aggregate([
       {
         $match: {
@@ -148,7 +150,98 @@ router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
       totalAmount=orderSum[0].totalAmount;
     }
 
-    return res.status(200).json({ "dashboard": { "cartCount": totalCarts, "wishlistCount": totalWishlist, "customerCount": totalCustomer, "orderSum": totalAmount } });
+
+    const orderPlaced = await Order.aggregate([
+      {
+        $match: {
+          status: 'placed',
+          createdAt: {
+            $gte: lastMonth,
+            $lt: previousMonth
+          }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalOrders: { $sum: 1 }
+        }
+      }
+    ]);
+
+    if (orderPlaced.length > 0) {
+      totalOrderPlaced=orderPlaced[0].totalOrders;
+    }
+
+
+    const orderShipped = await Order.aggregate([
+      {
+        $match: {
+          status: 'shipped',
+          createdAt: {
+            $gte: lastMonth,
+            $lt: previousMonth
+          }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalOrders: { $sum: 1 }
+        }
+      }
+    ]);
+
+    if (orderShipped.length > 0) {
+      totalOrderShipped=orderShipped[0].totalOrders;
+    }
+
+    const orderConfirmed = await Order.aggregate([
+      {
+        $match: {
+          status: 'confirmed',
+          createdAt: {
+            $gte: lastMonth,
+            $lt: previousMonth
+          }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalOrders: { $sum: 1 }
+        }
+      }
+    ]);
+
+    if (orderConfirmed.length > 0) {
+      totalOrderConfirmed=orderConfirmed[0].totalOrders;
+    }
+
+
+    const orderCancelled = await Order.aggregate([
+      {
+        $match: {
+          status: 'cancelled',
+          createdAt: {
+            $gte: lastMonth,
+            $lt: previousMonth
+          }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalOrders: { $sum: 1 }
+        }
+      }
+    ]);
+
+    if (orderCancelled.length > 0) {
+      totalOrderCancelled=orderCancelled[0].totalOrders;
+    }
+
+    return res.status(200).json({ "dashboard": { "cartCount": totalCarts, "wishlistCount": totalWishlist, "customerCount": totalCustomer, "orderSum": totalAmount, "orderPlacedCount": totalOrderPlaced, "orderShippedCount": totalOrderShipped, "orderConfirmedCount": totalOrderConfirmed, "orderCancelledCount": totalOrderCancelled  } });
 
   } catch (err) {
     res.status(500).json(err);
