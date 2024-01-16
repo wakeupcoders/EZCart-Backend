@@ -6,6 +6,7 @@ const {
 } = require("./verifyToken");
 const productSchema = require("../validators/productValidator");
 const CustomErrorHandler = require("../services/CustomErrorHandler");
+const Order = require("../models/Order");
 
 const router = require("express").Router();
 
@@ -222,6 +223,42 @@ router.get("/groupproducts", async(req, res) => {
           ])
 
         res.status(200).json(doc);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
+
+//GET best selling products
+router.get("/bestselling", async(req, res) => {
+    
+    try {
+
+        let productIds = [];
+
+        const doc = await Order.aggregate([
+            { $unwind: '$products' },
+            {
+              $group: {
+                _id: '$products.productId',
+                totalQuantity: {
+                  $sum: '$products.quantity'
+                }
+              }
+            },
+            { $sort: { totalQuantity: -1 } },
+            { $limit: 10 }
+          ]);
+
+           //Get all the IDS of products which are available for cart.
+           doc.forEach((element) => {
+            productIds.push(element["_id"]);
+        });
+
+         //Fetch products by using product ids.
+         const productsByIds = await Product.find({ _id: { $in: productIds } });
+
+        res.status(200).json(productsByIds);
     } catch (err) {
         res.status(500).json(err);
     }
