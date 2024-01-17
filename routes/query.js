@@ -1,4 +1,4 @@
-const Query = require("../models/query");
+const Query = require("../models/Query");
 const router = require("express").Router();
 
 //CREATE
