@@ -50,8 +50,14 @@ router.get("/find/:queryId", async(req, res, next) => {
 //GET ALL
 router.get("/", async(req, res, next) => {
     try {
-        const allQuery = await Query.find();
-        res.status(200).json(allQuery);
+        const { page, perpage } = req.query;
+        const options = {
+            page: parseInt(page, 10),
+            limit: parseInt(perpage, 10),
+        };
+        queries = await Query.paginate({}, options);
+
+        res.status(200).json(queries);
     } catch (err) {
         res.status(500).json(err);
     }

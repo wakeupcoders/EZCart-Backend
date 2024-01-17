@@ -50,8 +50,13 @@ router.get("/find/:newsletterId", async(req, res, next) => {
 //GET ALL
 router.get("/", async(req, res, next) => {
     try {
-        const allNewsletter = await Newsletter.find();
-        res.status(200).json(allNewsletter);
+        const { page, perpage } = req.query;
+        const options = {
+            page: parseInt(page, 10),
+            limit: parseInt(perpage, 10),
+        };
+        newsletter = await Newsletter.paginate({}, options);
+        res.status(200).json(newsletter);
     } catch (err) {
         res.status(500).json(err);
     }
