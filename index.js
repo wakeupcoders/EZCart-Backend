@@ -23,6 +23,8 @@ const razorpayRoute = require("./routes/razorpay");
 const forgotPasswordRoute = require("./routes/forgotpassword");
 const fileuploaderRoute = require("./routes/fileuploader");
 const dashboardRoute = require("./routes/dashboard");
+const queryRoute = require("./routes/query");
+const newsletterRoute = require("./routes/newsletter");
 
 const Sentry = require("@sentry/node");
 
@@ -66,6 +68,8 @@ app.use("/api/razorpay", razorpayRoute);
 app.use("/api/reset", forgotPasswordRoute);
 app.use("/api/fileuploader", fileuploaderRoute);
 app.use("/api/dashboard", dashboardRoute);
+app.use("/api/query", queryRoute);
+app.use("/api/newsletter", newsletterRoute);
 
 
 app.use(express.static('dist'));
