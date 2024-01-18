@@ -216,7 +216,7 @@ router.get("/groupproducts", async(req, res) => {
             },
             {
               $project: {
-                products: { $slice: ["$products", 4] }
+                products: { $slice: ["$products", 8] }
               }
             }
             
