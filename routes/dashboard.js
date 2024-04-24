@@ -53,8 +53,20 @@ router.get("/monthly/income", verifyTokenAndAdmin, async (req, res) => {
 // GET MONTHLY dashboard: 
 router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
   const date = new Date();
-  const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
-  const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
+  var lastMonth;
+  var previousMonth;
+
+  console.log(req.body)
+
+  if (req.body===null) {
+     lastMonth = new Date(date.setMonth(date.getMonth() - 1));
+     previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
+ }
+  else{
+    previousMonth=new Date(req.body.startDate);
+    lastMonth=new Date(req.body.endDate);
+  }
+
   totalCarts = 0;
   totalWishlist = 0;
   totalCustomer = 0;
@@ -71,8 +83,8 @@ router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
       {
         $match: {
           createdAt: {
-            $gte: lastMonth,
-            $lt: previousMonth
+            $gte: previousMonth,
+            $lt: lastMonth
           }
         }
       },
@@ -91,8 +103,8 @@ router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
       {
         $match: {
           createdAt: {
-            $gte: lastMonth,
-            $lt: previousMonth
+            $gte: previousMonth,
+            $lte: lastMonth
           }
         }
       },
@@ -112,8 +124,8 @@ router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
       {
         $match: {
           createdAt: {
-            $gte: lastMonth,
-            $lt: previousMonth
+            $gte: previousMonth,
+            $lt: lastMonth
           }
         }
       },
@@ -133,8 +145,8 @@ router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
       {
         $match: {
           createdAt: {
-            $gte: lastMonth,
-            $lt: previousMonth
+            $gte: previousMonth,
+            $lt: lastMonth
           }
         }
       },
@@ -156,8 +168,8 @@ router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
         $match: {
           status: 'placed',
           createdAt: {
-            $gte: lastMonth,
-            $lt: previousMonth
+            $gte: previousMonth,
+            $lt: lastMonth
           }
         }
       },
@@ -179,8 +191,8 @@ router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
         $match: {
           status: 'shipped',
           createdAt: {
-            $gte: lastMonth,
-            $lt: previousMonth
+            $gte: previousMonth,
+            $lt: lastMonth
           }
         }
       },
@@ -201,8 +213,8 @@ router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
         $match: {
           status: 'confirmed',
           createdAt: {
-            $gte: lastMonth,
-            $lt: previousMonth
+            $gte: previousMonth,
+            $lt: lastMonth
           }
         }
       },
@@ -224,8 +236,8 @@ router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
         $match: {
           status: 'cancelled',
           createdAt: {
-            $gte: lastMonth,
-            $lt: previousMonth
+            $gte: previousMonth,
+            $lt: lastMonth
           }
         }
       },
