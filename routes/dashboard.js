@@ -51,7 +51,7 @@ router.get("/monthly/income", verifyTokenAndAdmin, async (req, res) => {
 });
 
 // GET MONTHLY dashboard: 
-router.get("/monthly", verifyTokenAndAdmin, async (req, res) => {
+router.post("/monthly", verifyTokenAndAdmin, async (req, res) => {
   const date = new Date();
   var lastMonth;
   var previousMonth;
