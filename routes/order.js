@@ -1,4 +1,5 @@
 const Order = require("../models/Order");
+const Coupon = require("../models/Coupon");
 const User = require("../models/User");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
@@ -17,7 +18,7 @@ const router = require("express").Router();
 
 //CREATE
 
-router.post("/", verifyToken, async(req, res, next) => {
+router.post("/", verifyToken, async (req, res, next) => {
     try {
         let userId = req.body.userId;
         let productIds = [];
@@ -56,9 +57,53 @@ router.post("/", verifyToken, async(req, res, next) => {
             });
 
             //Find the Total of Products
-            let totalPrice = result.reduce(function(accumulator, item) {
+            let totalPrice = result.reduce(function (accumulator, item) {
                 return accumulator + item._doc.quantity * item._doc.price;
             }, 0);
+
+
+            //Check the Coupon 
+            const coupon = await Coupon.findOne({ code: req.body.couponcode });
+            let discount;
+            try {
+                if (coupon) {
+                    if (new Date().getTime() > coupon.startDate.getTime() && new Date().getTime() < coupon.endDate.getTime()) {
+                        if (totalPrice >= coupon.thresholdAmount) {
+                            
+                            if (coupon.type === 'percentage') {
+                                discount = (totalPrice * coupon.value) / 100
+                            } else {
+                                discount = coupon.value
+                            }
+
+                          totalPrice=totalPrice-discount;
+                        } else {
+                            return res.status(200).json({
+                                inRange: false,
+                                message: `Need to add more items worth ${coupon.thresholdAmount - totalPrice} to the list for this coupon to be enabled.`
+                            })
+                        }
+
+
+                    } else {
+                        return res.status(200).json({
+                            inRange: false,
+                            message: 'Coupon expired! Try another coupon.'
+                        })
+                    }
+
+
+                } else {
+                    res.status(200).json({
+                        inRange: false,
+                        message: 'Coupon invalid!please use a valid Coupon.'
+                    })
+                }
+            } catch (err) {
+                console.log(err)
+                res.status(500).json(err);
+            }
+
 
             // Create a Order creation onject
             if (totalPrice && totalPrice > 0) {
@@ -67,8 +112,8 @@ router.post("/", verifyToken, async(req, res, next) => {
                     products: cart.products,
                     receiverName: req.body.receiverName,
                     amount: totalPrice,
-                    discount: 20,
-                    couponcode: 20,
+                    discount: discount,
+                    couponcode: req.body.couponcode,
                     email: req.body.email,
                     phone: req.body.phone,
                     pmode: req.body.pmode,
@@ -79,10 +124,10 @@ router.post("/", verifyToken, async(req, res, next) => {
                 const newOrder = new Order(orderDetails);
                 const savedOrder = await newOrder.save();
 
-               
 
-                if(req.body.pmode==="COD"){
-                     //Deleting Cart of User
+
+                if (req.body.pmode === "COD") {
+                    //Deleting Cart of User
                     await Cart.findOneAndRemove({ userId: userId });
                     sendMail({
                         from: "cgqspider@gmail.com",
@@ -97,13 +142,13 @@ router.post("/", verifyToken, async(req, res, next) => {
                             // expires: "5 Minutes",
                         }),
                     })
-                    .then(() => {
-                        //return res.json({ message: "Order Confirmation Email Sent!!" });
-                        //return res.json({success: true});
-                    })
-                    .catch((err) => {
-                        //return res.status(500).json({ message: err });
-                    });
+                        .then(() => {
+                            //return res.json({ message: "Order Confirmation Email Sent!!" });
+                            //return res.json({success: true});
+                        })
+                        .catch((err) => {
+                            //return res.status(500).json({ message: err });
+                        });
 
                 }
 
@@ -118,13 +163,14 @@ router.post("/", verifyToken, async(req, res, next) => {
     }
 });
 
+
 //UPDATE
-router.put("/:id", verifyTokenAndAdmin, async(req, res) => {
+router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
     try {
         const updatedOrder = await Order.findByIdAndUpdate(
             req.params.id, {
-                $set: req.body,
-            }, { new: true }
+            $set: req.body,
+        }, { new: true }
         );
         res.status(200).json(updatedOrder);
     } catch (err) {
@@ -133,7 +179,7 @@ router.put("/:id", verifyTokenAndAdmin, async(req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyTokenAndAdmin, async(req, res) => {
+router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
     try {
         let msg = "";
         if (req.params.id === "clean") {
@@ -151,7 +197,7 @@ router.delete("/:id", verifyTokenAndAdmin, async(req, res) => {
 });
 
 //GET PRODUCT
-router.get("/:id", async(req, res) => {
+router.get("/:id", async (req, res) => {
     try {
         const order = await Order.findById(req.params.id);
         res.status(200).json(order);
@@ -161,7 +207,7 @@ router.get("/:id", async(req, res) => {
 });
 
 //GET USER ORDERS
-router.get("/find/:userId", verifyToken, async(req, res) => {
+router.get("/find/:userId", verifyToken, async (req, res) => {
     try {
         const orders = await Order.find({ userId: req.params.userId }).sort({ _id: -1 });
         res.status(200).json(orders);
@@ -171,7 +217,7 @@ router.get("/find/:userId", verifyToken, async(req, res) => {
 });
 
 //GET USER ORDERS
-router.get("/search/:key", verifyToken, async(req, res) => {
+router.get("/search/:key", verifyToken, async (req, res) => {
     try {
         const { page, perpage } = req.query;
         const options = {
@@ -182,15 +228,15 @@ router.get("/search/:key", verifyToken, async(req, res) => {
 
         //const orders = await Order.find();
         orders = await Order.paginate({
-                $or: [
-                    { userId: { $regex: req.params.key } },
-                    { pmode: { $regex: req.params.key } },
-                    { phone: { $regex: req.params.key } },
-                    { email: { $regex: req.params.key } },
-                    { address: { $regex: req.params.key } },
-                    { status: { $regex: req.params.key } },
-                ],
-            },
+            $or: [
+                { userId: { $regex: req.params.key } },
+                { pmode: { $regex: req.params.key } },
+                { phone: { $regex: req.params.key } },
+                { email: { $regex: req.params.key } },
+                { address: { $regex: req.params.key } },
+                { status: { $regex: req.params.key } },
+            ],
+        },
             options
         );
         res.status(200).json(orders);
@@ -200,12 +246,12 @@ router.get("/search/:key", verifyToken, async(req, res) => {
 });
 
 //Update order status
-router.put("/orderstatus/:orderId", verifyToken, async(req, res) => {
+router.put("/orderstatus/:orderId", verifyToken, async (req, res) => {
     try {
         const updatedOrder = await Order.findByIdAndUpdate(
             req.params.orderId, {
-                $set: { status: req.body.status },
-            }, { new: true }
+            $set: { status: req.body.status },
+        }, { new: true }
         );
         res.status(200).json(updatedOrder);
     } catch (err) {
@@ -214,7 +260,7 @@ router.put("/orderstatus/:orderId", verifyToken, async(req, res) => {
 });
 
 // //GET ALL
-router.get("/", verifyTokenAndAdmin, async(req, res) => {
+router.get("/", verifyTokenAndAdmin, async (req, res) => {
     try {
         const { page, perpage } = req.query;
         const options = {
@@ -232,7 +278,7 @@ router.get("/", verifyTokenAndAdmin, async(req, res) => {
 });
 
 // GET MONTHLY INCOME
-router.get("/monthly/income", verifyTokenAndAdmin, async(req, res) => {
+router.get("/monthly/income", verifyTokenAndAdmin, async (req, res) => {
     const productId = req.query.pid;
     const date = new Date();
     const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
@@ -240,25 +286,25 @@ router.get("/monthly/income", verifyTokenAndAdmin, async(req, res) => {
 
     try {
         const income = await Order.aggregate([{
-                $match: {
-                    createdAt: { $gte: previousMonth },
-                    ...(productId && {
-                        products: { $elemMatch: { productId } },
-                    }),
-                },
+            $match: {
+                createdAt: { $gte: previousMonth },
+                ...(productId && {
+                    products: { $elemMatch: { productId } },
+                }),
             },
-            {
-                $project: {
-                    month: { $month: "$createdAt" },
-                    sales: "$amount",
-                },
+        },
+        {
+            $project: {
+                month: { $month: "$createdAt" },
+                sales: "$amount",
             },
-            {
-                $group: {
-                    _id: "$month",
-                    total: { $sum: "$sales" },
-                },
+        },
+        {
+            $group: {
+                _id: "$month",
+                total: { $sum: "$sales" },
             },
+        },
         ]);
         res.status(200).json(income);
     } catch (err) {
