@@ -70,7 +70,7 @@ router.post("/", verifyToken, async (req, res, next) => {
                     if (new Date().getTime() > coupon.startDate.getTime() && new Date().getTime() < coupon.endDate.getTime()) {
                         if (totalPrice >= coupon.thresholdAmount) {
                             
-                            if (coupon.type === 'percentage') {
+                            if (coupon.type === 'Percentage') {
                                 discount = (totalPrice * coupon.value) / 100
                             } else {
                                 discount = coupon.value
