@@ -72,10 +72,14 @@ app.use("/api/query", queryRoute);
 app.use("/api/newsletter", newsletterRoute);
 
 
-app.use(express.static('dist'));
-
-
+// app.use(express.static('dist'));
 app.use(errorHandler);
+
+app.use(express.static(path.join(__dirname,'dist')));
+app.use("/*", function(req, res){
+    res.sendFile(path.join(__dirname+'dist/index.html'))
+})
+
 const server = app.listen(process.env.PORT || 5000, () => {
     console.log("Backend server is running!");
 });
