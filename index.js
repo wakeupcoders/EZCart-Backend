@@ -72,7 +72,11 @@ app.use("/api/query", queryRoute);
 app.use("/api/newsletter", newsletterRoute);
 
 
-app.use(express.static('dist'));
+// app.use(express.static('dist'));
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "dist", "build", "index.html"));
+});
 
 app.use(errorHandler);
 const server = app.listen(process.env.PORT || 5000, () => {
