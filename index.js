@@ -75,7 +75,7 @@ app.use("/api/newsletter", newsletterRoute);
 // app.use(express.static('dist'));
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "dist", "build", "index.html"));
+    res.sendFile(path.join(__dirname, "dist"));
 });
 
 app.use(errorHandler);
