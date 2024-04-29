@@ -99,7 +99,7 @@ router.post("/verify", verifyToken,async(req, res,next) => {
                 html: require("../templates/orderConfirmationEmailTemplate")({
                     emailFrom: req.body.email,
                     //name: req.body.name,
-                    trackLink: "google.com",
+                    trackLink: `${APP_URL}/tracking?orderId=${req.body.ezcart_order_id}`,
                     // size: ' KB',
                     // expires: "5 Minutes",
                 }),
