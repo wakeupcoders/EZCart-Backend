@@ -70,6 +70,23 @@ router.get("/search/:key", verifyToken, async(req, res) => {
     }
 });
 
+//BULK CREATE
+router.post("/bulkcollection", verifyTokenAndAdmin, async(req, res, next) => {
+    // const { error } = productSchema.validate(req.body);
+    // if (error) {
+    //     return next(CustomErrorHandler.validationError(error.details[0].message));
+    // }
+
+    try {
+        const savedCollection = await Collection.insertMany(req.body);
+        res.status(200).json(savedCollection);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+});
+
+
 
 // //GET ALL
 
