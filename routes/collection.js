@@ -59,8 +59,8 @@ router.get("/search/:key", verifyToken, async(req, res) => {
 
         collection = await Collection.paginate({
             "$or": [
-                { colName: { $regex: req.params.key } },
-                { colDesc: { $regex: req.params.key } },
+                { colName: { $regex: req.params.key.trim(), $options:"i" } },
+                { colDesc: { $regex: req.params.key.trim(), $options:"i" } },
             ]
         }, options);
         res.status(200).json(collection);

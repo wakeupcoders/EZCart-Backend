@@ -72,7 +72,6 @@ router.delete("/:id", verifyTokenAndAdmin, async(req, res) => {
     }
 });
 
-
 //GET PRODUCT
 router.get("/find/:id", async(req, res) => {
     try {
@@ -155,9 +154,9 @@ router.get("/search/:key", async(req, res) => {
 
         products = await Product.paginate({
                 $or: [
-                    { title: { $regex: req.params.key } },
-                    { desc: { $regex: req.params.key } },
-                    { pcollection: { $regex: req.params.key } },
+                    { title: { $regex: req.params.key.trim(), $options:'i' } },
+                    { desc: { $regex: req.params.key.trim(), $options:'i' } },
+                    { pcollection: { $regex: req.params.key.trim(), $options:'i' } },
                 ],
             },
             options
