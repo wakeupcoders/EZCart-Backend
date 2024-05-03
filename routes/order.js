@@ -20,8 +20,11 @@ const router = require("express").Router();
 
 router.post("/", verifyToken, async (req, res, next) => {
     try {
+        console.log(req.body.couponcode);
         let userId = req.body.userId;
         let productIds = [];
+        let discount=0;
+
 
         let user = await User.exists({ _id: userId });
 
@@ -37,6 +40,10 @@ router.post("/", verifyToken, async (req, res, next) => {
                 .status(404)
                 .send({ status: false, message: "Cart not found for this user" });
         } else {
+
+        console.log(req.body);
+
+
             //Get all the IDS of products which are available for cart.
             cart.products.forEach((element) => {
                 productIds.push(element["productId"]);
@@ -62,9 +69,14 @@ router.post("/", verifyToken, async (req, res, next) => {
             }, 0);
 
 
+
+            if(req.body.couponcode==='N/A'){
+                discount=0;
+            }
             //Check the Coupon 
+           else {
             const coupon = await Coupon.findOne({ code: req.body.couponcode });
-            let discount;
+         
             try {
                 if (coupon) {
                     if (new Date().getTime() > coupon.startDate.getTime() && new Date().getTime() < coupon.endDate.getTime()) {
@@ -76,7 +88,7 @@ router.post("/", verifyToken, async (req, res, next) => {
                                 discount = coupon.value
                             }
 
-                          totalPrice=totalPrice-discount;
+                          totalPrice=parseInt(totalPrice)-parseInt(discount);
                         } else {
                             return res.status(200).json({
                                 inRange: false,
@@ -94,15 +106,16 @@ router.post("/", verifyToken, async (req, res, next) => {
 
 
                 } else {
-                    res.status(200).json({
+                    return res.status(200).json({
                         inRange: false,
-                        message: 'Coupon invalid!please use a valid Coupon.'
+                        message: 'Coupon invalid! Please use a valid Coupon.'
                     })
                 }
             } catch (err) {
                 console.log(err)
                 res.status(500).json(err);
             }
+        }
 
 
             // Create a Order creation onject
@@ -113,7 +126,7 @@ router.post("/", verifyToken, async (req, res, next) => {
                     receiverName: req.body.receiverName,
                     amount: totalPrice,
                     discount: discount,
-                    couponcode: req.body.couponcode,
+                    couponcode: req.body.couponcode || 'N/A',
                     email: req.body.email,
                     phone: req.body.phone,
                     pmode: req.body.pmode,

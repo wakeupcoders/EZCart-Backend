@@ -17,6 +17,7 @@ const {
 
 //Create Order in CoinGate
 router.post("/",verifyToken, async(req, res,next) => {
+    console.log(req.body);
     var options = {
         amount: req.body.amount * 100, // amount in the smallest currency unit
         currency: "INR",
