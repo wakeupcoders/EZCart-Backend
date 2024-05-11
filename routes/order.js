@@ -5,6 +5,9 @@ const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const sendMail = require("../services/EmailService");
 
+let PushBullet = require('pushbullet');
+let pusher = new PushBullet('o.viaThpulAF1I3dHNSFpcTKvzEJ1mfaU8');
+
 const { isValidObjectId } = require("mongoose");
 
 const {
@@ -142,6 +145,7 @@ router.post("/", verifyToken, async (req, res, next) => {
                 if (req.body.pmode === "COD") {
                     //Deleting Cart of User
                     await Cart.findOneAndRemove({ userId: userId });
+                    let response =  pusher.note("ujwX8AvGAaisjBIx0QJxlY", "New Order Recieved", "Check Admin Portal !!");
                     sendMail({
                         from: "cgqspider@gmail.com",
                         to: req.body.email,
@@ -150,7 +154,7 @@ router.post("/", verifyToken, async (req, res, next) => {
                         html: require("../templates/orderConfirmationEmailTemplate")({
                             emailFrom: req.body.email,
                             //name: req.body.name,
-                            trackLink: "google.com",
+                            trackLink: `${APP_URL}/tracking?orderId=${req.body.ezcart_order_id}`,
                             // size: ' KB',
                             // expires: "5 Minutes",
                         }),
