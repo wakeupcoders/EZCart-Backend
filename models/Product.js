@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const paginate = require('mongoose-paginate-v2');
+var aggregatePaginate = require("mongoose-aggregate-paginate-v2");
 //import paginate from 'mongoose-paginate-v2';
 
 const ProductSchema = new mongoose.Schema({
@@ -18,5 +19,6 @@ const ProductSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 ProductSchema.plugin(paginate);
+ProductSchema.plugin(aggregatePaginate);
 
 module.exports = mongoose.model("Product", ProductSchema);
