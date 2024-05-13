@@ -165,6 +165,28 @@ router.get("/search/:key", async(req, res) => {
     }
 });
 
+
+router.get("/suggestions/:key", async(req, res) => {
+    try {
+        products = await Product.aggregate([
+            {
+              $search: {
+                index: "products_autocomplete",
+                text: {
+                  query: req.params.key.trim(),
+                  path: {
+                    wildcard: "*"
+                  }
+                }
+              }
+            }
+          ]);
+         res.status(200).json(products);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 //GET ALL PRODUCTS
 router.get("/", async(req, res) => {
     const qNew = req.query.new;
