@@ -152,21 +152,13 @@ router.get("/search/:key", async(req, res) => {
             sort: { createdAt: -1 },
         };
        
-        products = await Product.aggregatePaginate([
-            {
-              $search: {
-                index: "default",
-                text: {
-                  query:  req.params.key.trim(),
-                  path: {
-                    wildcard: "*"
-                  }
-                }
-              }
-            }
-          ],
-            options
-        );
+        products = await Product.paginate({
+            $or: [
+                { title: { $regex: req.params.key.trim(), $options:'i' } },
+                { desc: { $regex: req.params.key.trim(), $options:'i' } },
+                { pcollection: { $regex: req.params.key.trim(), $options:'i' } },
+            ],
+        }),
         res.status(200).json(products);
     } catch (err) {
         res.status(500).json(err);
