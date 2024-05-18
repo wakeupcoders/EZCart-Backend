@@ -8,7 +8,7 @@ const ClientSchema = new mongoose.Schema({
     clientPhone: { type: String, required: true },
     clientLogo: { type: String, required: true},
     clientLogoText: { type: String, required: true},
-    clientIsLogoText: { type: Boolean,  default: false},
+    clientIsLogoText: { type: Boolean,  default: true},
     clientGoogleMapIframe: { type: String, required: true},
     clientAbout: { type: String, required: true},
     clientStory: { type: String, required: true},
