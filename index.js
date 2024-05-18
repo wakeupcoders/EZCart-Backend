@@ -25,6 +25,7 @@ const fileuploaderRoute = require("./routes/fileuploader");
 const dashboardRoute = require("./routes/dashboard");
 const queryRoute = require("./routes/query");
 const newsletterRoute = require("./routes/newsletter");
+const clientRoute = require("./routes/client");
 
 const Sentry = require("@sentry/node");
 
@@ -70,6 +71,7 @@ app.use("/api/fileuploader", fileuploaderRoute);
 app.use("/api/dashboard", dashboardRoute);
 app.use("/api/query", queryRoute);
 app.use("/api/newsletter", newsletterRoute);
+app.use("/api/client", clientRoute);
 
 
 // app.use(express.static('dist'));

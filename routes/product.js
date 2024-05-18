@@ -247,7 +247,6 @@ router.get("/groupproducts", async(req, res) => {
     }
 });
 
-
 //GET best selling products
 router.get("/bestselling", async(req, res) => {
     
