@@ -13,7 +13,7 @@ router.post("/singleupload", multerInstance.single('file'), async (req, res, nex
     try {
 
         // Set up Gemini API
-        const gemini_api_key = process.env.GEM_API_KEY;
+        const gemini_api_key = 'AIzaSyAPEE1DCLwJJirsydsZR-RRFTtmYp6zrG4';
         const googleAI = new GoogleGenerativeAI(gemini_api_key);
         const geminiConfig = {
             temperature: 0.4,
@@ -71,7 +71,7 @@ router.post("/singleupload", multerInstance.single('file'), async (req, res, nex
     } catch (err) {
         next(err)
     }
-    
+
 });
 
 router.post("/singleremove", async (req, res, next) => {
