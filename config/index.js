@@ -7,5 +7,6 @@ module.exports = {
     APP_URL,
     DEBUG_MODE,
     COINGATE_TOKEN,
-    COINGATE_URL
+    COINGATE_URL,
+    GEM_API_KEY
 } = process.env;
