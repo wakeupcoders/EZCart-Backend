@@ -71,6 +71,7 @@ router.post("/singleupload", multerInstance.single('file'), async (req, res, nex
     } catch (err) {
         next(err)
     }
+    
 });
 
 router.post("/singleremove", async (req, res, next) => {
