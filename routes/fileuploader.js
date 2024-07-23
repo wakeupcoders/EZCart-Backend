@@ -69,6 +69,7 @@ router.post("/singleupload", multerInstance.single('file'), async (req, res, nex
 
         res.json({ title:titletxt.text(), description:desc.text(), metadata: req.file, 'fileUrl': APP_URL + "/images/" + req.file.filename });
     } catch (err) {
+        console.log(err);
         next(err)
     }
 
