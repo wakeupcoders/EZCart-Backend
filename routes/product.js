@@ -17,9 +17,7 @@ router.post("/", verifyTokenAndAdmin, async(req, res, next) => {
     if (error) {
         return next(CustomErrorHandler.validationError(error.details[0].message));
     }
-
     try {
-
         const savedProduct = await new Product(req.body).save();
         res.status(200).json(savedProduct);
     } catch (err) {
@@ -166,22 +164,65 @@ router.get("/search/:key", async(req, res) => {
 });
 
 
-router.get("/suggestions/:key", async(req, res) => {
+router.get("/fsearch/:key", async(req, res) => {
     try {
-        products = await Product.aggregate([
-            {
-              $search: {
-                index: "products_autocomplete",
-                text: {
-                  query: req.params.key.trim(),
-                  path: {
-                    wildcard: "*"
-                  }
+        const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+        const limit = parseInt(req.query.limit) || 10; // Default to limit of 10 if not provided
+        const skip = (page - 1) * limit; // Calculate how many documents to skip
+        
+        // First aggregation to fetch products
+        const products = await Product.aggregate([
+          {
+            $search: {
+              index: "fulltextsearch",
+              text: {
+                query: req.params.key.trim(),
+                path: {
+                  wildcard: "*"
                 }
               }
             }
-          ]);
-         res.status(200).json(products);
+          },
+          {
+            $skip: skip // Skip the documents for pagination
+          },
+          {
+            $limit: limit // Limit the number of documents returned
+          }
+        ]);
+        
+        // Second aggregation to count the total number of products that match the search query
+        const totalCountResult = await Product.aggregate([
+          {
+            $search: {
+              index: "fulltextsearch",
+              text: {
+                query: req.params.key.trim(),
+                path: {
+                  wildcard: "*"
+                }
+              }
+            }
+          },
+          {
+            $count: "total" // Count the total number of matching documents
+          }
+        ]);
+        
+        const totalCount = totalCountResult[0] ? totalCountResult[0].total : 0; // Total count of products
+        
+        // Calculate hasNext and hasPrev
+        const hasNext = (page * limit) < totalCount; // If the current page multiplied by limit is less than totalCount, there is a next page
+        const hasPrev = page > 1; // If the current page is greater than 1, there is a previous page
+        
+        res.status(200).json({
+          totalCount, // Total count of products
+          page,
+          limit,
+          products,
+          hasNext, // Indicates if there is a next page
+          hasPrev  // Indicates if there is a previous page
+        });
     } catch (err) {
         res.status(500).json(err);
     }
