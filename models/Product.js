@@ -10,7 +10,6 @@ const ProductSchema = new mongoose.Schema({
     categories: { type: Array },
     size: { type: Array },
     color: { type: Array },
-    pcollectionid: { type: mongoose.Schema.Types.ObjectId, ref: 'Collection', required: true }, // Reference to Collection
     pcollection: { type: String, required: true },
     price: { type: Number, required: true },
     originalprice: { type: Number, required: true },
