@@ -256,7 +256,7 @@ router.get("/productsbycollectionid/:key", async (req, res) => {
     const totalCountResult = await Product.aggregate([
       {
         $match: {
-          pcollectionid: collectionId // Match products by pCollection ID
+          pcollection: collectionId // Match products by pCollection ID
         }
       },
       {
