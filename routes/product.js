@@ -227,6 +227,61 @@ router.get("/fsearch/:key", async (req, res) => {
   }
 });
 
+router.get("/productsbycollectionid/:key", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
+    const limit = parseInt(req.query.limit) || 10; // Default to limit of 10 if not provided
+    const skip = (page - 1) * limit; // Calculate how many documents to skip
+
+    // Extract the collection ID from the key parameter
+    const collectionId = req.params.key.trim();
+
+    // First aggregation to fetch products by pCollectionId
+    const products = await Product.aggregate([
+      {
+        $match: {
+          pcollection: mongoose.Types.ObjectId(collectionId) // Match products by pCollection ID
+        }
+      },
+      {
+        $skip: skip // Skip the documents for pagination
+      },
+      {
+        $limit: limit // Limit the number of documents returned
+      }
+    ]);
+
+    // Second aggregation to count the total number of products that match the pCollectionId
+    const totalCountResult = await Product.aggregate([
+      {
+        $match: {
+          pcollection: mongoose.Types.ObjectId(collectionId) // Match products by pCollection ID
+        }
+      },
+      {
+        $count: "total" // Count the total number of matching documents
+      }
+    ]);
+
+    const totalCount = totalCountResult[0] ? totalCountResult[0].total : 0; // Total count of products
+
+    // Calculate hasNext and hasPrev
+    const hasNext = (page * limit) < totalCount; // If the current page multiplied by limit is less than totalCount, there is a next page
+    const hasPrev = page > 1; // If the current page is greater than 1, there is a previous page
+
+    res.status(200).json({
+      totalCount, // Total count of products
+      page,
+      limit,
+      products,
+      hasNext, // Indicates if there is a next page
+      hasPrev  // Indicates if there is a previous page
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 router.get("/suggestions/:key", async (req, res) => {
   try {
     let q = req.params.key.trim();
