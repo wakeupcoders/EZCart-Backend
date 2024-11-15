@@ -7,6 +7,7 @@ const {
 const productSchema = require("../validators/productValidator");
 const CustomErrorHandler = require("../services/CustomErrorHandler");
 const Order = require("../models/Order");
+const mongoose = require('mongoose');
 
 const router = require("express").Router();
 
@@ -240,7 +241,7 @@ router.get("/productsbycollectionid/:key", async (req, res) => {
     const products = await Product.aggregate([
       {
         $match: {
-          pcollection: mongoose.Types.ObjectId(collectionId) // Match products by pCollection ID
+          pcollectionid: mongoose.Types.ObjectId(collectionId) // Match products by pCollection ID
         }
       },
       {
@@ -255,7 +256,7 @@ router.get("/productsbycollectionid/:key", async (req, res) => {
     const totalCountResult = await Product.aggregate([
       {
         $match: {
-          pcollection: mongoose.Types.ObjectId(collectionId) // Match products by pCollection ID
+          pcollectionid: mongoose.Types.ObjectId(collectionId) // Match products by pCollection ID
         }
       },
       {
