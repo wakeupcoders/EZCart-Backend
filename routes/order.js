@@ -145,14 +145,14 @@ router.post("/", verifyToken, async (req, res, next) => {
                 if (req.body.pmode === "COD") {
                     //Deleting Cart of User
                     await Cart.findOneAndRemove({ userId: userId });
-                    let response =  pusher.note("ujwX8AvGAaisjBIx0QJxlY", "New Order Recieved", "Check Admin Portal !!");
-                    let options = {
-                        target_device_iden: 'ujwX8AvGAaisjBIx0QJxlY', // The iden of the device corresponding to the phone that should send the SMS
-                        conversation_iden: '+917009557474',       // Phone number to send the SMS to
-                        message: 'New Order Received !!!'                           // The SMS message to send
-                    };
+                    // let response =  pusher.note("ujwX8AvGAaisjBIx0QJxlY", "New Order Recieved", "Check Admin Portal !!");
+                    // let options = {
+                    //     target_device_iden: 'ujwX8AvGAaisjBIx0QJxlY', // The iden of the device corresponding to the phone that should send the SMS
+                    //     conversation_iden: '+917009557474',       // Phone number to send the SMS to
+                    //     message: 'New Order Received !!!'                           // The SMS message to send
+                    // };
                     
-                    pusher.sendSMS(options);
+                    // pusher.sendSMS(options);
                     sendMail({
                         from: "cgqspider@gmail.com",
                         to: req.body.email,
