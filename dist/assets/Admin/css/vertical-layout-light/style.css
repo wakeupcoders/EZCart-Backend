@@ -116,6 +116,12 @@
 /* === Import template variables === */
 /*-------------------------------------------------------------------*/
 /* === SCSS Compass Functions === */
+
+.btn-primary{
+  background-color: forestgreen !important;
+}
+
+
 @-moz-keyframes flash {
   0% {
     opacity: 1;
@@ -14190,7 +14196,7 @@ a.badge:hover, a.badge:focus {
 
 .badge-primary {
   color: #fff;
-  background-color: #4B49AC;
+  background-color: forestgreen;
 }
 
 a.badge-primary:hover, a.badge-primary:focus {

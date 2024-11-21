@@ -274,6 +274,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 @techiediaries/ngx-qrcode
 MIT
 
+angular-ng-autocomplete
+MIT
+
 chart.js
 MIT
 The MIT License (MIT)
