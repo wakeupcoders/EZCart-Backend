@@ -6,7 +6,7 @@ const registerSchema = require("../validators/authValidators");
 const googleRegisterSchema = require("../validators/googleAuthValidators");
 
 const CustomErrorHandler = require("../services/CustomErrorHandler");
-var { APP_URL } = require("../config/index");
+var { APP_URL, BREVO_EMAIL } = require("../config/index");
 
 const sendMail = require("../services/EmailService");
 
@@ -42,7 +42,7 @@ router.post("/register", async(req, res, next) => {
                 jwt.sign(userObj, process.env.JWT_SEC, { expiresIn: "3600s" });
             //Send a confirmation mail to the user.
             sendMail({
-                    from: "cgqspider@gmail.com",
+                    from: BREVO_EMAIL,
                     to: req.body.email,
                     subject: "Please Confirm Your Account",
                     text: `Account Confirmation`,

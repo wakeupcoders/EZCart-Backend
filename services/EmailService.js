@@ -1,5 +1,5 @@
 var nodemailer = require('nodemailer');
-var { EMAIL, EMAIL_PASS } = require('../config');
+var { BRAND_NAME, EMAIL, EMAIL_PASS } = require('../config');
 
 const sendEmail = async({ from, to, subject, text, html }) => {
     let transporter = nodemailer.createTransport({
@@ -12,7 +12,7 @@ const sendEmail = async({ from, to, subject, text, html }) => {
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: `EZCart <${from}>`, // sender address
+        from: `${BRAND_NAME} <${from}>`, // sender address
         to: to, // list of receivers
         subject: subject, // Subject line
         text: text, // plain text body
