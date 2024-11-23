@@ -87,11 +87,11 @@ module.exports = ({ emailFrom, name, confirmLink, expires }) => {
             line-height: inherit;
         }
         .btn-primary table td:hover {
-            background-color: #34495e !important;
+            background-color: forestgreen !important;
         }
         .btn-primary a:hover {
-            background-color: #34495e !important;
-            border-color: #34495e !important;
+            background-color: forestgreen !important;
+            border-color: forestgreen !important;
         }
         }
         </style>
@@ -104,7 +104,7 @@ module.exports = ({ emailFrom, name, confirmLink, expires }) => {
             <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
     
                 <!-- START CENTERED WHITE CONTAINER -->
-                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">This is preheader text. Some clients will show this text as a preview.</span>
+                <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Thanks for choosing, Satguru STC, Please Confirm Your Account.</span>
                 <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
     
                 <!-- START MAIN CONTENT AREA -->
@@ -125,7 +125,7 @@ module.exports = ({ emailFrom, name, confirmLink, expires }) => {
                                     <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto;">
                                     <tbody>
                                         <tr>
-                                        <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; background-color: #4B49AC; border-radius: 5px; text-align: center;"> <a href="${confirmLink}" target="_blank" style="display: inline-block; color: #ffffff; background-color: #4B49AC; border: solid 1px #4B49AC; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #4B49AC;">Confirm Account</a> </td>
+                                        <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; background-color: #4B49AC; border-radius: 5px; text-align: center;"> <a href="${confirmLink}" target="_blank" style="display: inline-block; color: #ffffff; background-color: forestgreen; border: solid 1px forestgreen; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #4B49AC;">Confirm Account</a> </td>
                                         </tr>
                                     </tbody>
                                     </table>
